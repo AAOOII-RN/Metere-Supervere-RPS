@@ -1,6 +1,7 @@
 function love.load()
 	Btnui = require("btnui"):new()
 	Ww, Wh = love.graphics.getDimensions()
+	Mother = nil
 	Circles = {}
 	CirclesCount = 50
 	for i = 1, CirclesCount do
@@ -17,7 +18,7 @@ function love.load()
 		Circles[i].radius = math.random() * 40 + 10
 		Circles[i].x = math.random() * Ww
 		Circles[i].y = math.random() * Wh
-		Circles[i].lifetime = math.random() * 15 + 45
+		Circles[i].lifetime = 30
 		Circles[i].btnId = "Circle-" .. i
 		Circles[i].btn = Btnui:newCirc(Circles[i].btnId, Circles[i].x, Circles[i].y, Circles[i].radius, false)
 	end
@@ -64,14 +65,47 @@ function love.update(dt)
 	end
 end
 
-function love.mousepressed(x, y, button, istouch, presses) end
+function love.mousepressed(mx, my, button, istouch, presses)
+	for i = #Circles, 1, -1 do
+		local circles = Circles[i]
+		if Btnui:isHovered(circles.btnId, mx, my) and Mother ~= circles then
+			if Mother then
+				CirclesCount = CirclesCount + 1
+				local father = circles
+				local child = {}
+				local red = (Mother.red + father.red) / 2 * (math.random() * 0.06 + 0.97)
+				local green = (Mother.green + father.green) / 2 * (math.random() * 0.06 + 0.97)
+				local blue = (Mother.blue + father.blue) / 2 * (math.random() * 0.06 + 0.97)
+				local sum = red + green + blue
+
+				child = {}
+				child.red = red / sum
+				child.green = green / sum
+				child.blue = blue / sum
+
+				child.radius = (Mother.radius + father.radius) / 2 * (math.random() * 0.06 + 0.97)
+				child.x = (Mother.x + father.x) / 2
+				child.y = (Mother.y + father.y) / 2
+				child.lifetime = 30
+				child.btnId = "Circle-" .. CirclesCount
+				child.btn = Btnui:newCirc(child.btnId, child.x, child.y, child.radius, false)
+				table.insert(Circles, child)
+				Mother = nil
+			else
+				Mother = circles
+			end
+		end
+	end
+end
 
 function love.draw()
-	love.graphics.print("Hello World")
-
 	for _, circles in pairs(Circles) do
-		love.graphics.setColor(circles.red, circles.green, circles.blue, circles.lifetime / 60)
+		love.graphics.setColor(circles.red, circles.green, circles.blue, circles.lifetime / 30)
 		love.graphics.circle("fill", circles.x, circles.y, circles.radius)
+		if Mother and Mother.btnId == circles.btnId then
+			love.graphics.setColor(0, 1, 0, 1)
+			love.graphics.circle("line", circles.x, circles.y, circles.radius + 5)
+		end
 		love.graphics.setColor(1, 1, 1, 1)
 	end
 
