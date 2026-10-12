@@ -21,6 +21,18 @@ function love.load()
 			img = love.graphics.newImage("assets/img/checkered.png"),
 		},
 	}
+  Img = {
+    grass = {
+      img = love.graphics.newImage("assets/img/grass.png"),
+    },
+
+  }
+	-- sfx
+	Sfx = {
+		click = {
+			audio = love.audio.newSource("assets/audio/typewriter_click.wav", "static"),
+		},
+	}
 end
 
 function Distance(x1, y1, x2, y2)
@@ -32,6 +44,10 @@ function love.update(dt)
 	Sm:update(dt)
 end
 
+function love.keypressed(key, scancode, isrepeat)
+	Sm:keypressed(key)
+end
+
 function love.resize(w, h)
 	Ui:resize(w, h)
 end
@@ -41,6 +57,7 @@ function love.mousepressed(mx, my, button, istouch, presses)
 end
 
 function love.draw()
+	love.graphics.setBackgroundColor(Pal.base)
 	Sm:draw()
 	Ui:draw()
 	Btnui:draw()
