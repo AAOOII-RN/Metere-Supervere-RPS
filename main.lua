@@ -4,13 +4,15 @@ function love.load()
 	Ticker = 0
 
 	-- requires
+	Pal = require("modules.palette")
 	Btnui = require("modules.btnui"):new()
 	Ui = require("modules.ui-handler"):new()
 	Sm = require("modules.state").new()
 
 	-- State handler
-	OnState = "main menu"
+	OnState = "play"
 	Sm:add("main menu", require("states.main menu"))
+	Sm:add("play", require("states.play"))
 	Sm:switch(OnState)
 
 	-- Images
@@ -30,12 +32,16 @@ function love.update(dt)
 	Sm:update(dt)
 end
 
+function love.resize(w, h)
+	Ui:resize(w, h)
+end
+
 function love.mousepressed(mx, my, button, istouch, presses)
 	Sm:mousepressed(mx, my, button)
 end
 
 function love.draw()
-	--Sm:draw()
+	Sm:draw()
 	Ui:draw()
-	--Btnui:draw()
+	Btnui:draw()
 end
