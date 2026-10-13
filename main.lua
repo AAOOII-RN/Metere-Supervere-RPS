@@ -5,6 +5,7 @@ function love.load()
 
 	-- requires
 	Pal = require("modules.palette")
+	Fy6 = require("modules.fy6"):new(0, 9.81 * 30, 30)
 	Btnui = require("modules.btnui"):new()
 	Ui = require("modules.ui-handler"):new()
 	Sm = require("modules.state").new()
@@ -21,12 +22,11 @@ function love.load()
 			img = love.graphics.newImage("assets/img/checkered.png"),
 		},
 	}
-  Img = {
-    grass = {
-      img = love.graphics.newImage("assets/img/grass.png"),
-    },
-
-  }
+	Img = {
+		grass = {
+			img = love.graphics.newImage("assets/img/grass.png"),
+		},
+	}
 	-- sfx
 	Sfx = {
 		click = {
@@ -41,6 +41,7 @@ end
 
 function love.update(dt)
 	Ticker = Ticker + dt
+	Fy6:update(dt)
 	Sm:update(dt)
 end
 
@@ -60,5 +61,6 @@ function love.draw()
 	love.graphics.setBackgroundColor(Pal.base)
 	Sm:draw()
 	Ui:draw()
+	Fy6:draw()
 	Btnui:draw()
 end
