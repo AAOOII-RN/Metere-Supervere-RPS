@@ -1,4 +1,5 @@
 function love.load()
+	math.randomseed(os.time() - 1791982643)
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	Ww, Wh = love.graphics.getDimensions()
 	Ticker = 0
